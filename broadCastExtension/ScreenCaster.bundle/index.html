@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Screen Mirror</title>
+    <script type="text/javascript"
+        src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js">
+    </script>
+    <script src="connect_bridge.min.js" language="JavaScript" type="text/javascript"></script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+
+        .center {
+            margin: 0;
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            zoom: 10;
+        }
+
+        .foo {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            color: white;
+            margin: 20px;
+
+        }
+
+        .foo span {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+<img class="center" id="mirrorImage" src="background.jpg"/>
+<div class="foo">
+    <span id="skdbcj">Click to screen enter full screen</span>
+</div>
+<script>
+    var ip = window.location.hostname;
+    var port = window.location.port;
+    var mirrorImage = document.getElementById("mirrorImage");
+
+    var contentHeight = document.documentElement.clientHeight;
+    var contentWidth = document.documentElement.clientWidth;
+
+    var isFullScreen = false;
+    var index = 0;
+
+    var fullscreenText = document.getElementById("skdbcj");
+    fullscreenText.innerHTML = "Click to screen to enter full screen";
+    showFullScreenNotification();
+
+    adaptScreenSize();
+
+
+    window.addEventListener("click", function (event) {
+        if (isFullScreen) {
+            closeFullscreen();
+        } else {
+            openFullscreen();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        mirrorImage.onload = function () {
+            mirrorImage.style.visibility = 'visible';
+            adaptScreenSize();
+            setImgSrc();
+        };
+
+        mirrorImage.onerror = function () {
+            setErrorImgSrc();
+        };
+    });
+
+    function setImgSrc() {
+        var currentTime = new Date().getTime();
+        mirrorImage.src = "http://" + ip + ":" + port + "/screencast/?time=" + currentTime;
+        index++;
+    }
+
+    function setErrorImgSrc() {
+        mirrorImage.src = "background.jpg";
+    }
+
+    var elem = document.documentElement;
+
+    function openFullscreen() {
+        fullscreenText.innerHTML = "Click to screen to exit full screen";
+        showFullScreenNotification();
+        isFullScreen = true;
+        setTimeout(adaptScreenSize, 1000);
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+    }
+
+    function closeFullscreen() {
+        fullscreenText.innerHTML = "Click to screen to enter full screen"
+        showFullScreenNotification()
+        isFullScreen = false
+        setTimeout(adaptScreenSize, 1000)
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) { /* Firefox */
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE/Edge */
+            document.msExitFullscreen();
+        }
+    }
+
+    function adaptScreenSize() {
+        contentWidth = window.innerWidth;
+        contentHeight = window.innerHeight;
+
+        if (contentWidth <= 0 || contentHeight <= 0) {
+            return;
+        }
+
+        var imageWidth = mirrorImage.clientWidth;
+        var imageHeight = mirrorImage.clientHeight;
+
+        if (imageWidth > 0 && imageHeight > 0 && imageWidth / imageHeight > contentWidth / contentHeight) {
+            mirrorImage.style.left = '0';
+            mirrorImage.style.top = Math.floor((contentHeight - (contentWidth / imageWidth  * imageHeight)) / 20) + 'px';
+        } else {
+            mirrorImage.style.left = Math.floor((contentWidth - (contentHeight / imageHeight  * imageWidth)) / 20) + 'px';
+            mirrorImage.style.top = '0';
+        }
+    }
+
+    function showFullScreenNotification() {
+        fullscreenText.style.visibility = 'visible';
+
+        setTimeout(function () {
+            fullscreenText.style.visibility = 'hidden';
+        }, 2000)
+    }
+
+    window.onresize = adaptScreenSize;
+</script>
+</body>
+</html>
+

@@ -1,0 +1,33 @@
+{
+  "originHash" : "6c01758a374bbd056f6588dbf7b3ea7307aff0eb6ee792eb09260aa2826cce2c",
+  "pins" : [
+    {
+      "identity" : "ffmpeg-kit-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tylerjonesio/ffmpeg-kit-spm",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6053b0e4f8607314ff5e14e0b18fc250c0f87c9b"
+      }
+    },
+    {
+      "identity" : "haishinkit.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HaishinKit/HaishinKit.swift",
+      "state" : {
+        "revision" : "910189ee6a28a6ef1b97126282d7f13ffb4c7908",
+        "version" : "2.0.5"
+      }
+    },
+    {
+      "identity" : "logboard",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shogo4405/Logboard.git",
+      "state" : {
+        "revision" : "272976e1f3e8873e60ffe4b08fe50df48a93751b",
+        "version" : "2.5.0"
+      }
+    }
+  ],
+  "version" : 3
+}
